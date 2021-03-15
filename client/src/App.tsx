@@ -1,13 +1,13 @@
 import React from 'react';
-import Content from './component/Content';
 import { ChakraProvider } from "@chakra-ui/react"
+import Main from './pages/Main';
 
 
 function App() {
   return (
     <div className="App">
         <ChakraProvider>
-          <Content/>
+          <Main/>
         </ChakraProvider>
     </div>
   );

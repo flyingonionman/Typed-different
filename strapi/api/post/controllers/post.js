@@ -7,11 +7,22 @@ const { parseMultipartData, sanitizeEntity } = require('strapi-utils');
  */
 
 module.exports = {
+    findOneByTags: async (ctx) =>{
+      let entity;
+
+      const { tag } = ctx.params;
+      
+      entity = await strapi.query('post').find({"tags.Name": tag });
+      
+
+      return sanitizeEntity(entity, { model: strapi.models.post });
+
+    },
     /**
-   * Create a record.
-   *
-   * @return {Object}
-   */
+     * Create a record.
+     *
+     * @return {Object}
+     */
     async create(ctx) {
         let entity;
         const user = ctx.state.user.id 
