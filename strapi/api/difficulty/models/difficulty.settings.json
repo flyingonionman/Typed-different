@@ -1,0 +1,22 @@
+{
+  "kind": "collectionType",
+  "collectionName": "difficulties",
+  "info": {
+    "name": "Difficulty",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "level": {
+      "type": "string"
+    },
+    "posts": {
+      "collection": "post",
+      "via": "difficulty"
+    }
+  }
+}

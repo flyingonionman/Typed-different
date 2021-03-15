@@ -1,0 +1,46 @@
+{
+  "kind": "collectionType",
+  "collectionName": "posts",
+  "info": {
+    "name": "post",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "Title": {
+      "type": "string"
+    },
+    "Body": {
+      "type": "richtext"
+    },
+    "tags": {
+      "collection": "tag",
+      "via": "posts"
+    },
+    "user": {
+      "plugin": "users-permissions",
+      "model": "user",
+      "via": "posts"
+    },
+    "Slug": {
+      "type": "uid",
+      "targetField": "Title"
+    },
+    "choices": {
+      "type": "enumeration",
+      "enum": [
+        "string",
+        "number",
+        "object"
+      ]
+    },
+    "difficulty": {
+      "via": "posts",
+      "model": "difficulty"
+    }
+  }
+}
