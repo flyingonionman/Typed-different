@@ -46,7 +46,6 @@ const localurl = "http://localhost:5000"
 
 function Upload(props: any) {
     const { isOpen, onOpen, onClose } = useDisclosure()
-    const [jwtstring, setJwtstring] = useState("")
     
     /**
      * Config for strapi POST request
@@ -71,7 +70,7 @@ function Upload(props: any) {
         body : JSON.stringify({ Title, Body, difficulty, tags 
         })
         }).then(
-            response => response.json()
+            response  => async() => await response.json()
         ).then(
             res => async ()=> {
                 await fetch(localurl + `/posts/`, {
@@ -83,6 +82,7 @@ function Upload(props: any) {
             }
         )
     )
+
 
     /**
      * React-hook-form setup
@@ -183,7 +183,7 @@ function Upload(props: any) {
                     <Button variant="outline" mr={3} onClick={onClose}>
                         Cancel
                     </Button>
-                    <Button colorScheme="blue" type="submit" form="post-form" onClick={()=>location.reload()}>
+                    <Button colorScheme="blue" type="submit" form="post-form" onClick={onClose}>
                         Submit
                         
                     </Button>

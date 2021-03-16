@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState} from 'react'
 import Content from '../component/Content';
 import Login from '../component/Login';
 import { Box ,Badge } from "@chakra-ui/react"
@@ -9,8 +9,12 @@ function Main() {
     const [cookies, setCookie, removeCookie] = useCookies(['jwt']);
 
     const savetoken=(e : string)=>{
-        setCookie('jwt', e)
+        let inFifteenMinutes = new Date(new Date().getTime() + 15 * 60 * 1000);
+
+        console.log(e);
+        setCookie('jwt', e, {path: "/", expires: inFifteenMinutes})
     }
+
     return (
         <Box
             display="flex"
@@ -22,7 +26,7 @@ function Main() {
             overflowY="scroll"
 
         >
-            <Login savetoken={(e :string)=>savetoken(e)}/>
+            <Login savetoken={(e :string)=>savetoken(e)} cookies={cookies}/> 
             <Content/>
         </Box>
     )
