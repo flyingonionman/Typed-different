@@ -8,14 +8,19 @@ import {
   QueryClientProvider,
 } from 'react-query'
 
+import { CookiesProvider } from 'react-cookie';
+
 const queryClient = new QueryClient()
 
 ReactDOM.render(
-  <QueryClientProvider client={queryClient}>
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
-  </QueryClientProvider>
+  <CookiesProvider>
+    <QueryClientProvider client={queryClient}>
+      <React.StrictMode>
+        <App />
+      </React.StrictMode>
+    </QueryClientProvider>
+  </CookiesProvider>
+
   ,
   document.getElementById('root')
 );

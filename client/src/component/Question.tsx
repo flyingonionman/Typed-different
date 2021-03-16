@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import { Box ,Badge } from "@chakra-ui/react"
 import post from '../types/posts'
+import { Text } from "@chakra-ui/react"
 
 function Question(props:typeof post) {
     useEffect(() => {
@@ -10,41 +11,57 @@ function Question(props:typeof post) {
         <Box 
             d="flex" 
             flexDir="column"
-            alignItems="baseline" 
+            width="100%"
             p="6" 
-            maxW="sm" 
             borderWidth="1px" 
-            borderRadius="lg" 
-            overflow="hidden">
-            
-            {props.tags.map((element,i) => {
-                return (
-                    <Badge key ={i }borderRadius="full" px="2" colorScheme="teal">
-                        {element.Name}
-                    </Badge>
-                );
-            })}
+            mt="10"
+            borderColor="blackAlpha.500"
+
+            >
 
             <Box
-                color="gray.500"
+                d="flex"
+                lineHeight="tight"
+                width="inherit"
+                isTruncated
+                justifyContent="space-between"
+            >
+                <Text 
+                    color="black"
+                    fontWeight="semibold"
+                    fontSize="xl">
+                    {props.Title}
+                </Text>
+
+                {props.tags.map((element,i) => {
+                    return (
+                        <Badge 
+                            float="right"
+                            key ={i} px="2" py="1"  colorScheme="blue">
+                            {element.Name}
+                        </Badge>
+                    );
+                })}
+            </Box>
+            
+          
+
+            <Box
                 fontWeight="semibold"
                 letterSpacing="wide"
                 fontSize="xs"
                 textTransform="uppercase"
-                ml="2"
+                mt="2"
             >
-                {props.difficulty.level} 
+                <Text 
+                    color="orange"
+
+                fontSize="sm">
+                    {props.difficulty.level}</Text>
+
             </Box>
 
-            <Box
-                mt="1"
-                fontWeight="semibold"
-                as="h4"
-                lineHeight="tight"
-                isTruncated
-            >
-                {props.Title}
-            </Box>
+            
             <Box
                 mt="1"
                 fontWeight="semibold"

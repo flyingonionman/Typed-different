@@ -1,3 +1,4 @@
+
 import React from 'react'
 import { useForm } from "react-hook-form";
 
@@ -7,15 +8,19 @@ import {
     FormControl,
     Input,
     Button,
-    Box
+    Box,
+    Heading
   } from "@chakra-ui/react";
+ 
 
 import {
-    useQuery,
     useMutation,
-    useQueryClient,
 } from 'react-query'
   
+
+/**
+ * Config for strapi POST request
+ */
 const config = {
     method: 'POST',
     headers: {
@@ -23,73 +28,111 @@ const config = {
     },
 }
 
+interface loginvar {
+    email: string, 
+    password: string
+}
+
+const localurl = "http://localhost:5000"
 /**
 * Login functionality
 */
-
-function Login() {
+function Login({savetoken}: {savetoken: any}) {
 
     /**
      * React-query mutation
      */
-    const mutation = useMutation(() => fetch(`http://localhost:5000/posts/`, {
-        ...config 
+    const mutation = useMutation( ({
+        email,password
+    } : loginvar )=> fetch(localurl + "/auth/local", {
+        ...config ,
+        body : JSON.stringify({identifier:email, password})
         }).then(
-         response => response.json()
-    ))
+         response => {
+            return response.json()
+        }).then(
+            data => {
+                savetoken(data.jwt);
+            }
+        )
+    )
 
     /**
      * React-hook-form setup
      */
     const { handleSubmit, errors, register, formState } = useForm();
 
-    function validateField(value : string) {
+    function validateField(value : any) {
         if (!value) {
             return "Field is required";
         } else return true;
     }
 
     function onSubmit(values : any) {
-        return new Promise<void>(resolve => {
-            setTimeout(() => {
-                alert(JSON.stringify(values, null, 2));
-                resolve();
-            }, 3000);
-        });
+        mutation.mutate({
+            email: values.email, 
+            password: values.password
+        })
     }
 
     return (
-        <Box>
-            
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <FormLabel fontSize="4xl" as="legend">Login</FormLabel>
+        <Box
+            d="flex"
+            flex=".25"
+            flexDir="column"
+        >
+            <Heading as="h2" size="2xl" mb="10" mt="0">
+                Typed: differently
+            </Heading>
 
-                <FormControl isInvalid={errors.name || errors.password}>
-                    <FormLabel htmlFor="email">Email</FormLabel>
-                    <Input
-                        name="email"
-                        placeholder="email"
-                        ref={register({ validate: validateField })}
-                    />
-                    <FormErrorMessage>
-                        {errors.email && errors.email.message}
-                    </FormErrorMessage>
+            <Box
+                border="solid 1px"
+                borderColor="blackAlpha.900"
+                p="6"
+                flexDir="column"
+                d="flex"
+            >
+                <form onSubmit={handleSubmit(onSubmit)}>
+                    <FormLabel fontSize="4xl" as="legend">Login</FormLabel>
 
-                    <FormLabel htmlFor="password">Password</FormLabel>
-                    <Input
-                        name="password"
-                        placeholder="password"
-                        ref={register({ validate: validateField })}
-                    />
-                    <FormErrorMessage>
-                        {errors.password && errors.password.message}
-                    </FormErrorMessage>
+                    <FormControl isInvalid={errors.email || errors.password}>
+                        <FormLabel htmlFor="email">Email</FormLabel>
+                        <Input
+                            name="email"
+                            placeholder="email"
+                            ref={register({ validate: validateField })}
+                        />
+                        <FormErrorMessage>
+                            {errors.email && errors.email.message}
+                        </FormErrorMessage>
 
-                </FormControl>
-                <Button mt={4} colorScheme="teal" isLoading={formState.isSubmitting} type="submit">
-                    Submit
+                        <FormLabel htmlFor="password">Password</FormLabel>
+                        <Input
+                            name="password"
+                            placeholder="password"
+                            ref={register({ validate: validateField })}
+                        />
+                        <FormErrorMessage>
+                            {errors.password && errors.password.message}
+                        </FormErrorMessage>
+
+                    </FormControl>
+                    <Button mt={4} colorScheme="blue" isLoading={formState.isSubmitting} type="submit">
+                        Submit
+                    </Button>
+                </form>
+
+                <Button mt={4} colorScheme="blue" 
+                onClick={()=>{
+                    window.open(localurl+'/connect/github/redirect')
+                }}
+                >
+                        Login with github
                 </Button>
-            </form>
+            </Box>
+            
+
+            
         </Box>
         
     );

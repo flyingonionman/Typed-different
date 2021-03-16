@@ -26,9 +26,11 @@ module.exports = {
     async create(ctx) {
         let entity;
         const user = ctx.state.user.id 
-        console.log(user);
+        console.log(ctx.request.body);
+
         if (ctx.is('multipart')) {
           const { data, files } = parseMultipartData(ctx);
+
           entity = await strapi.services.post.create({...data, user}, { files });
         } else {
           entity = await strapi.services.post.create({...ctx.request.body, user});
