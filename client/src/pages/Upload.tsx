@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 import React, { useEffect, useState} from 'react'
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
@@ -45,7 +46,6 @@ const localurl = "http://localhost:5000"
 
 function Upload(props: any) {
     const { isOpen, onOpen, onClose } = useDisclosure()
-    const firstField : any = React.useRef()
     const [jwtstring, setJwtstring] = useState("")
     
     /**
@@ -61,22 +61,29 @@ function Upload(props: any) {
 
     /**
      * React-query mutation
+     * @TODO: make it load stuff instantly
+     * 
      */
     const mutation = useMutation( ({
         Title,Body, difficulty, tags
     } : postvar )=> fetch(localurl + "/posts", {
         ...config ,
-        body : JSON.stringify({ Title, Body, difficulty, tags
+        body : JSON.stringify({ Title, Body, difficulty, tags 
         })
         }).then(
-        response => {
-            return response.json()
-        }).then(
-            data => console.log(data)
+            response => response.json()
+        ).then(
+            res => async ()=> {
+                await fetch(localurl + `/posts/`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }, 
+                }) 
+            }
         )
     )
 
-    console.log(props.allCookies)
     /**
      * React-hook-form setup
      */
@@ -90,7 +97,7 @@ function Upload(props: any) {
  
      function onSubmit(values : any) {
          console.log(values);
-         /* mutation.mutate({...values}) */
+         mutation.mutate({tags : [values.tag],...values})
      }
     
     return (
@@ -107,7 +114,6 @@ function Upload(props: any) {
                 colorScheme ="blue"
                 isOpen={isOpen}
                 placement="right"
-                initialFocusRef={firstField}
                 onClose={onClose}
             >
                 <DrawerOverlay>
@@ -126,26 +132,42 @@ function Upload(props: any) {
                             <Box>
                                 <FormLabel htmlFor="Title">Title</FormLabel>
                                 <Input
-                                    ref={firstField}
                                     id="Title"
+                                    name="Title"
+                                    ref={register({ validate: validateField })}
+
                                 />
                             </Box>
 
                             <Box>
                                 <FormLabel htmlFor="body">Body</FormLabel>
-                                <Textarea id="body" />
+                                <Textarea 
+                                    id="body" 
+                                    name="Body" 
+                                    ref={register({ validate: validateField })}
+                                />
                             </Box>
 
                             <Box>
                             <FormLabel htmlFor="difficulty">Select Difficulty</FormLabel>
-                                <Select id="difficulty" defaultValue="Easy">
+                                <Select 
+                                    id="difficulty" 
+                                    defaultValue="Easy"
+                                    ref={register({ validate: validateField })}
+                                    name ="difficulty"
+                                >
                                     <option value={1}>Easy</option>
                                     <option value={2}>Medium</option>
                                     <option value={3}>Hard</option>
                                 </Select>
                             
                                 <FormLabel mt="5" htmlFor="tag">Select Tag</FormLabel>
-                                <Select id="tag" defaultValue="class">
+                                <Select 
+                                    id="tag" 
+                                    defaultValue="class"
+                                    ref={register({ validate: validateField })}
+                                    name ="tag"
+                            >
                                     <option value={3}>Class</option>
                                     <option value={1}>Arrays</option>
                                     <option value={2}>Object Types</option>
@@ -153,6 +175,7 @@ function Upload(props: any) {
                             </Box>
                             
                         </Stack>
+
                     </form>
                     </DrawerBody>
 
@@ -160,7 +183,7 @@ function Upload(props: any) {
                     <Button variant="outline" mr={3} onClick={onClose}>
                         Cancel
                     </Button>
-                    <Button colorScheme="blue" type="submit" form="post-form" onClick={onClose}>
+                    <Button colorScheme="blue" type="submit" form="post-form" onClick={()=>location.reload()}>
                         Submit
                         
                     </Button>

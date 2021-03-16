@@ -57,16 +57,15 @@ function Content() : JSX.Element {
 
             <HStack spacing="32px">
                 
-                    <Select 
-                        value= {filter}
-                        onChange = {handleChange}
-                        >
-                        <option value="all">All</option>
-                        <option value="class">Class</option>
-                        <option value="object_types">Object Types</option>
-                    </Select>
-
-
+                <Select 
+                    value= {filter}
+                    onChange = {handleChange}
+                    >
+                    <option value="all">All</option>
+                    <option value="class">Class</option>
+                    <option value="object_types">Object Types</option>
+                    <option value="arrays">Arrays</option>
+                </Select>
                 <Upload/>
 
             </HStack>

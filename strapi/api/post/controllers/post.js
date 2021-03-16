@@ -18,6 +18,13 @@ module.exports = {
       return sanitizeEntity(entity, { model: strapi.models.post });
 
     },
+    async find(ctx){
+      let entity = await strapi.query('post').find({
+        _sort: 'created_at:desc'
+      });
+      return sanitizeEntity(entity, { model: strapi.models.post });
+    }
+    ,
     /**
      * Create a record.
      *
